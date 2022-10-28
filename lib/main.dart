@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_ui/cubit/main_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -77,21 +79,30 @@ class DarkModeSwitch extends StatefulWidget {
 }
 
 class _DarkModeSwitchState extends State<DarkModeSwitch> {
-  bool isDarkModeOn = true;
+  bool isDarkModeOn = false;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          isDarkModeOn = !isDarkModeOn;
-        });
-      },
-      child: Image.asset(
-        isDarkModeOn
-            ? 'images/night_mode_button.png'
-            : 'images/light_mode_button.png',
-        width: 80,
+    return BlocProvider(
+      create: (context) => MainCubit(),
+      child: BlocBuilder<MainCubit, MainState>(
+        builder: (context, state) {
+          //isDarkModeOn = state.isNightMode;
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                state.isNightMode = !state.isNightMode;
+                //isDarkModeOn = !isDarkModeOn;
+              });
+            },
+            child: Image.asset(
+              state.isNightMode
+                  ? 'images/night_mode_button.png'
+                  : 'images/light_mode_button.png',
+              width: 80,
+            ),
+          );
+        },
       ),
     );
   }
