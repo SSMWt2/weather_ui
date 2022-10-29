@@ -74,12 +74,149 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                     const TopWidget(),
                     const MiddleWidget(),
+                    const BottomWidget(),
                   ],
                 ),
               ),
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class BottomWidget extends StatefulWidget {
+  const BottomWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<BottomWidget> createState() => _BottomWidgetState();
+}
+
+class _BottomWidgetState extends State<BottomWidget> {
+  bool isNightMode = false;
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<MainCubit, MainState>(
+      listener: (context, state) {
+        // ignore: todo
+        // TODO: implement listener
+        setState(() {
+          isNightMode = state.isNightMode;
+        });
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          BottomWidgetDetail(
+            isNightMode: isNightMode,
+            icon: Icons.sunny,
+            day: 'Fri',
+            data: '28.10',
+            temperature: '15°C',
+            isSelected: false,
+          ),
+          BottomWidgetDetail(
+            isNightMode: isNightMode,
+            icon: Icons.cloud,
+            day: 'Sat',
+            data: '29.10',
+            temperature: '19°C',
+            isSelected: true,
+          ),
+          BottomWidgetDetail(
+            isNightMode: isNightMode,
+            icon: Icons.wind_power,
+            day: 'Sun',
+            data: '30.10',
+            temperature: '18°C',
+            isSelected: false,
+          ),
+          BottomWidgetDetail(
+            isNightMode: isNightMode,
+            icon: Icons.cloudy_snowing,
+            day: ':(',
+            data: '31.11',
+            temperature: '15°C',
+            isSelected: false,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BottomWidgetDetail extends StatelessWidget {
+  const BottomWidgetDetail({
+    Key? key,
+    required this.isNightMode,
+    required this.day,
+    required this.data,
+    required this.temperature,
+    required this.icon,
+    required this.isSelected,
+  }) : super(key: key);
+
+  final bool isNightMode;
+  final String day;
+  final String data;
+  final String temperature;
+  final IconData icon;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120,
+      width: 60,
+      decoration: isSelected
+          ? BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    isNightMode
+                        ? const Color.fromARGB(255, 1, 30, 126)
+                        : Colors.blue,
+                    isNightMode
+                        ? const Color.fromARGB(255, 0, 140, 255)
+                        : const Color.fromARGB(255, 129, 225, 255),
+                  ]),
+              borderRadius: const BorderRadius.all(Radius.circular(30)),
+            )
+          : null,
+      child: Column(
+        children: [
+          const SizedBox(height: 8),
+          Text(
+            day,
+            style: TextStyle(
+              color: isNightMode ? Colors.white : Colors.black,
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            data,
+            style: TextStyle(
+                color: isNightMode ? Colors.white : Colors.black, fontSize: 12),
+          ),
+          const SizedBox(height: 8),
+          Icon(
+            icon,
+            color: isNightMode ? Colors.white : Colors.black,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            temperature,
+            style: TextStyle(
+              color: isNightMode ? Colors.white : Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -179,7 +316,7 @@ class _TopWidgetState extends State<TopWidget> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: const [
                     Text(
-                      '27°',
+                      '19°',
                       style: TextStyle(
                         fontSize: 64,
                         fontWeight: FontWeight.bold,
