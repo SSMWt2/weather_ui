@@ -224,81 +224,98 @@ class TopWidget extends StatelessWidget {
   }
 }
 
-class MiddleWidget extends StatelessWidget {
+class MiddleWidget extends StatefulWidget {
   const MiddleWidget({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<MiddleWidget> createState() => _MiddleWidgetState();
+}
+
+class _MiddleWidgetState extends State<MiddleWidget> {
+  bool isNightMode = false;
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(
-        horizontal: 32,
-        vertical: 16,
-      ),
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(32)),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(4, 8), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // Headline
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Weather details'.toUpperCase(),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+    return BlocListener<MainCubit, MainState>(
+      listener: (context, state) {
+        // ignore: todo
+        // TODO: implement listener
+
+        setState(() {
+          isNightMode = state.isNightMode;
+        });
+      },
+      child: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(
+          horizontal: 32,
+          vertical: 16,
+        ),
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(32)),
+          color: isNightMode ? Color.fromARGB(255, 0, 24, 160) : Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(4, 8), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            // Headline
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Weather details'.toUpperCase(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: isNightMode ? Colors.white : Colors.black,
+                  ),
                 ),
-              ),
-              const Icon(
-                Icons.refresh,
-                color: Colors.black45,
-                size: 24,
-              )
-            ],
-          ),
-          // Spacer
-          const SizedBox(height: 32),
-          // Grid
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              GridDetailsElement(icon: Icons.ac_unit_outlined),
-              GridDetailsElement(icon: Icons.accessible_outlined),
-              GridDetailsElement(icon: Icons.anchor_sharp),
-            ],
-          ),
-          // Spacer
-          const SizedBox(height: 32),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              GridDetailsElement(icon: Icons.card_membership_rounded),
-              GridDetailsElement(icon: Icons.temple_buddhist),
-              GridDetailsElement(icon: Icons.drive_eta),
-            ],
-          ),
-        ],
+                Icon(
+                  Icons.refresh,
+                  color: isNightMode ? Colors.white : Colors.black45,
+                  size: 24,
+                )
+              ],
+            ),
+            // Spacer
+            const SizedBox(height: 32),
+            // Grid
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: const [
+                GridDetailsElement(icon: Icons.ac_unit_outlined),
+                GridDetailsElement(icon: Icons.accessible_outlined),
+                GridDetailsElement(icon: Icons.anchor_sharp),
+              ],
+            ),
+            // Spacer
+            const SizedBox(height: 32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: const [
+                GridDetailsElement(icon: Icons.card_membership_rounded),
+                GridDetailsElement(icon: Icons.temple_buddhist),
+                GridDetailsElement(icon: Icons.drive_eta),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class GridDetailsElement extends StatelessWidget {
+class GridDetailsElement extends StatefulWidget {
   const GridDetailsElement({
     Key? key,
     required this.icon,
@@ -307,27 +324,43 @@ class GridDetailsElement extends StatelessWidget {
   final IconData icon;
 
   @override
+  State<GridDetailsElement> createState() => _GridDetailsElementState();
+}
+
+class _GridDetailsElementState extends State<GridDetailsElement> {
+  bool isNightMode = false;
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(
-          icon,
-          color: Colors.cyan,
-        ),
-        const SizedBox(height: 4),
-        const Text(
-          'wind',
-          style: TextStyle(color: Colors.grey),
-        ),
-        const SizedBox(height: 4),
-        const Text(
-          '9km/h',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
+    return BlocListener<MainCubit, MainState>(
+      listener: (context, state) {
+        // ignore: todo
+        // TODO: implement listener
+        setState(() {
+          isNightMode = state.isNightMode;
+        });
+      },
+      child: Column(
+        children: [
+          Icon(
+            widget.icon,
+            color: Colors.cyan,
           ),
-        ),
-      ],
+          const SizedBox(height: 4),
+          const Text(
+            'wind',
+            style: TextStyle(color: Colors.grey),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '9km/h',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: isNightMode ? Colors.white : Colors.black,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
