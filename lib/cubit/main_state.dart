@@ -1,6 +1,6 @@
 part of 'main_cubit.dart';
 
-@immutable
+//@immutable
 class MainState {
   var isNightMode = false;
   MainState({

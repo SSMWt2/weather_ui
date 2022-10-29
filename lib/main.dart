@@ -21,48 +21,64 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class WeatherScreen extends StatelessWidget {
+class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
 
   @override
+  State<WeatherScreen> createState() => _WeatherScreenState();
+}
+
+class _WeatherScreenState extends State<WeatherScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: <Color>[
-              Color.fromARGB(255, 234, 237, 240),
-              Color.fromARGB(255, 176, 200, 221),
-            ],
-            tileMode: TileMode.mirror,
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: BlocProvider(
+        create: (context) => MainCubit(),
+        child: BlocBuilder<MainCubit, MainState>(
+          builder: (context, state) {
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: <Color>[
+                    state.isNightMode
+                        ? const Color.fromARGB(255, 3, 75, 148)
+                        : const Color.fromARGB(255, 234, 237, 240),
+                    state.isNightMode
+                        ? const Color.fromARGB(255, 0, 105, 197)
+                        : const Color.fromARGB(255, 176, 200, 221),
+                  ],
+                  tileMode: TileMode.mirror,
+                ),
+              ),
+              child: SafeArea(
+                child: Column(
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.menu,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.menu,
+                            ),
+                          ),
+                          const DarkModeSwitch(),
+                        ],
                       ),
                     ),
-                    const DarkModeSwitch(),
+                    const TopWidget(),
+                    const MiddleWidget(),
                   ],
                 ),
               ),
-              const TopWidget(),
-              const MiddleWidget(),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
@@ -79,30 +95,23 @@ class DarkModeSwitch extends StatefulWidget {
 }
 
 class _DarkModeSwitchState extends State<DarkModeSwitch> {
-  bool isDarkModeOn = false;
-
+  bool isNightMode = false;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MainCubit(),
-      child: BlocBuilder<MainCubit, MainState>(
-        builder: (context, state) {
-          //isDarkModeOn = state.isNightMode;
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                state.isNightMode = !state.isNightMode;
-                //isDarkModeOn = !isDarkModeOn;
-              });
-            },
-            child: Image.asset(
-              state.isNightMode
-                  ? 'images/night_mode_button.png'
-                  : 'images/light_mode_button.png',
-              width: 80,
-            ),
-          );
-        },
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isNightMode = !isNightMode;
+          isNightMode
+              ? context.read<MainCubit>().switchNightMode()
+              : context.read<MainCubit>().switchDailyMode();
+        });
+      },
+      child: Image.asset(
+        isNightMode
+            ? 'images/night_mode_button.png'
+            : 'images/light_mode_button.png',
+        width: 80,
       ),
     );
   }
