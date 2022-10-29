@@ -117,109 +117,128 @@ class _DarkModeSwitchState extends State<DarkModeSwitch> {
   }
 }
 
-class TopWidget extends StatelessWidget {
+class TopWidget extends StatefulWidget {
   const TopWidget({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<TopWidget> createState() => _TopWidgetState();
+}
+
+class _TopWidgetState extends State<TopWidget> {
+  bool isNightMode = false;
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          width: double.infinity,
-          margin: const EdgeInsets.symmetric(
-                horizontal: 32,
-                vertical: 16,
-              ) +
-              const EdgeInsets.only(top: 16),
-          padding: const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(32)),
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: <Color>[
-                Color(0xFF67DED3),
-                Color(0xFF51A8FD),
+    return BlocListener<MainCubit, MainState>(
+      listener: (context, state) {
+        // ignore: todo
+        // TODO: implement listener
+        setState(() {
+          isNightMode = state.isNightMode;
+        });
+      },
+      child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ) +
+                const EdgeInsets.only(top: 16),
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(32)),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+                  isNightMode
+                      ? const Color.fromARGB(255, 0, 81, 255)
+                      : const Color(0xFF67DED3),
+                  isNightMode
+                      ? const Color.fromARGB(255, 13, 0, 201)
+                      : const Color(0xFF51A8FD),
+                ],
+                tileMode: TileMode.mirror,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(4, 8), // changes position of shadow
+                ),
               ],
-              tileMode: TileMode.mirror,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(4, 8), // changes position of shadow
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              // 1st ROW
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
-                  Text(
-                    '27°',
-                    style: TextStyle(
-                      fontSize: 64,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+            child: Column(
+              children: [
+                // 1st ROW
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: const [
+                    Text(
+                      '27°',
+                      style: TextStyle(
+                        fontSize: 64,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              // 2nd ROW
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'Wrocław',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                  ],
+                ),
+                // 2nd ROW
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          'Zadubie',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Monday, 10/22',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
+                        SizedBox(height: 10),
+                        Text(
+                          'Saturday, 10/22',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const Icon(
-                    Icons.air,
-                    color: Color.fromARGB(50, 255, 255, 255),
-                    size: 80,
-                  ),
-                ],
-              ),
-            ],
+                      ],
+                    ),
+                    const Icon(
+                      Icons.air,
+                      color: Color.fromARGB(50, 255, 255, 255),
+                      size: 80,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        Positioned.fill(
-          left: 32,
-          top: 0,
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: SizedBox(
-              width: 200,
-              height: 150,
-              child: Image.network(
-                'https://freepngimg.com/thumb/categories/2275.png',
+          Positioned.fill(
+            left: 32,
+            top: 0,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: 200,
+                height: 150,
+                child: Image.network(
+                  'https://freepngimg.com/thumb/categories/2275.png',
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -255,7 +274,9 @@ class _MiddleWidgetState extends State<MiddleWidget> {
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(32)),
-          color: isNightMode ? Color.fromARGB(255, 0, 24, 160) : Colors.white,
+          color: isNightMode
+              ? const Color.fromARGB(255, 0, 24, 160)
+              : Colors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
